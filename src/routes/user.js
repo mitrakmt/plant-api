@@ -6,6 +6,7 @@ const { isAuthenticated } = require("../utils/auth");
 router
   .route("/")
   .get(userCtrl.GET_USERS)
+  .put(userCtrl.LOGIN)
   .post(userCtrl.CREATE_USER);
 
 router

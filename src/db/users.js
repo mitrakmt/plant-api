@@ -15,6 +15,10 @@ module.exports = db => {
       emails: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         default: []
+      },
+      subscribed: {
+        type: Sequelize.BOOLEAN,
+        default: false
       }
     },
     {

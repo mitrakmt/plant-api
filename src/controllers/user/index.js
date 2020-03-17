@@ -11,7 +11,6 @@ let userController = {};
 userController.CREATE_USER = (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const otherEmails = req.body.otherEmails;
 
   return userModel.CHECK_USER_EMAIL_EXISTS(email).then(response => {
     if (response.user_exists) {
@@ -23,10 +22,20 @@ userController.CREATE_USER = (req, res) => {
       return;
     }
 
-    userModel.SIGN_UP(email, password, otherEmails).then(response => {
+    userModel.SIGN_UP(email, password).then(response => {
       const token = generateTokens(response.user);
       res.status(200).send({ token });
     });
+  });
+};
+
+userController.LOGIN = (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  userModel.LOGIN(email, password).then(response => {
+    const token = generateTokens(response.user);
+    res.status(200).send({ token });
   });
 };
 

@@ -1,14 +1,14 @@
 const bcrypt = require("bcryptjs");
 const { comparePasswords } = require("../../utils/auth");
 const User = require("../../db").Users;
+const { sendEmail } = require("../../utils/email");
 let userModel = {};
 
-userModel.SIGN_UP = (email, password, otherEmails) => {
+userModel.SIGN_UP = (email, password) => {
   return hashPassword(password).then(hash => {
     return User.create({
       email,
-      password: hash,
-      otherEmails
+      password: hash
     }).then((user, error) => {
       if (error) {
         return {
@@ -16,6 +16,13 @@ userModel.SIGN_UP = (email, password, otherEmails) => {
           message: "Failed to register user. Please try a different username."
         };
       }
+
+      sendEmail({
+        email: user.email,
+        text: `Thanks for signing up!`,
+        subject: "You are now living a PlantLyfe!"
+      });
+
       return {
         success: true,
         user
@@ -24,7 +31,7 @@ userModel.SIGN_UP = (email, password, otherEmails) => {
   });
 };
 
-userModel.SIGN_IN = (email, password) => {
+userModel.LOGIN = (email, password) => {
   return User.findOne({
     where: {
       email
